@@ -55,7 +55,7 @@ body {
     background-color: rgba(255, 255, 255, 0.9);
     width: 50%;
     margin: auto;
-    padding-top: 25%;
+    padding-top: 15%;
 }
 
 .login-form-forgot {
@@ -96,7 +96,6 @@ body {
 }
 
 .main-component {
-    text-align: center;
     margin: auto;
     overflow-y: scroll;
 }
@@ -105,6 +104,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     height: 200px;
     border: 2px solid #00b96b;
     border-left: unset;

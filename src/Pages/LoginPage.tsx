@@ -1,70 +1,132 @@
 
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Alert, Button, Checkbox, Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import "../styles.css"
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
+import { baseUrl } from '../Constants';
+import { FC, useState } from 'react';
 
-function LoginPage() {
+type Props = {
+  changeUserStatus: () => void
+}
 
-    const navigate = useNavigate()
+const LoginPage: FC<Props> = ({ changeUserStatus }) => {
 
-    const onFinish = (values: any) => {
+  const navigate = useNavigate()
+  const [loginFailed, setLoginFailed] = useState(false)
+
+  const onClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setLoginFailed(false)
+  };
+
+  const loginFailAlert = () => {
+
+    if (loginFailed) {
+      return (<Space direction="vertical" style={{ width: '100%' }}>
+        <Alert
+          message="Login Failed"
+          description="Wrong username or password"
+          type="error"
+          closable
+          onClose={onClose}
+        />
+      </Space>)
+    } else {
+      return <></>
+    }
+
+  }
+
+
+  const loginUser = async (username: string, password: string) => {
+
+    if (baseUrl !== undefined) {
+      const response = await fetch(baseUrl + "/login", {
+        method: 'POST',
+        body: new URLSearchParams({
+          username: username,
+          password: password
+        }).toString(),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      if (response.status === 200) {
+        setLoginFailed(false)
+        return response.json()
+
+      } else {
+        setLoginFailed(true)
+        return undefined
+      }
+    }
+  }
+
+  const onFinish = async (values: any) => {
+    const data = await loginUser(values.username, values.password).then((data) => {
+      console.log(data)
+      if (data !== undefined) {
+        console.log(loginFailed)
+        changeUserStatus()
         navigate("/main-page")
-        console.log(values.username)
-      };
-    
-      const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-      };
-    
-      return (
-        <div className="login-page-form">
-        <Title level={3}>Welcome to Confidential Maternal Health Guardian!</Title>
-        <Title level={5}>Please login with your credentials</Title>
-        <Form
-          name="normal_login"
-          className="login-form"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+      }
+    }
+    )
+
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  return (
+    <div className="login-page-form">
+      <Title level={3}>Welcome to Confidential Maternal Health Guardian!</Title>
+      <Title level={5}>Please login with your credentials</Title>
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <Form.Item
+          name="username"
+          rules={[{ required: true, message: 'Please input your Username!' }]}
         >
-          <Form.Item
-            name="username"
-            rules={[{ required: true, message: 'Please input your Username!' }]}
-          >
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username"/>
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your Password!' }]}
+        >
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>Remember me</Checkbox>
           </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[{ required: true, message: 'Please input your Password!' }]}
-          >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
-          <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-    
-            <a className="login-form-forgot" href="">
-              Forgot password
-            </a>
-          </Form.Item>
-    
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
-            </Button>
-            Or <a href="">Register Now!</a>
-          </Form.Item>
-        </Form>
-        </div>
-      );
+
+          <a className="login-form-forgot" href="">
+            Forgot password
+          </a>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="login-form-button">
+            Log in
+          </Button>
+          Or <a href="/register-page">Register Now!</a>
+        </Form.Item>
+      </Form>
+      {loginFailAlert()}
+    </div>
+  );
 }
 
 export default LoginPage;

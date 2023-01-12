@@ -8,51 +8,50 @@ import QueryComponent from '../Components/QueryComponent';
 import SiteLayout, { MenuItem } from '../Components/SiteLayout';
 
 function MainPage() {
-    const [currentContent, setCurrentContent] = useState<JSX.Element[]>([])
+  const [currentContent, setCurrentContent] = useState<JSX.Element[]>([])
 
+  useEffect(() => {
+    //Runs only on the first render, calls parent table from backend
+    displayMain()
 
-    useEffect(() => {
-        //Runs only on the first render, calls parent table from backend
-        displayMain()
-    
-      }, []);
-      
-    const navigate = useNavigate()
-    const displayMain = () => {
-        const mainComponent = [
-            <MainComponent key={15}/>
-          ]
-        setCurrentContent(mainComponent)
+  }, []);
+
+  const navigate = useNavigate()
+  const displayMain = () => {
+    const mainComponent = [
+      <MainComponent key={15} />
+    ]
+    setCurrentContent(mainComponent)
+  }
+
+  const displayQuery = () => {
+    const queryComponent = [
+      <QueryComponent key={16} />
+    ]
+    setCurrentContent(queryComponent)
+  }
+
+  const displayPrediction = () => {
+    const predictionComponent = [
+      <PredictionComponent key={17} />
+    ]
+    setCurrentContent(predictionComponent)
+  }
+
+  const handleCurrentContent = (e: MenuItem) => {
+    if (e?.key === '1') {
+      displayMain()
+    } else if (e?.key === '2') {
+      displayQuery()
+    } else if (e?.key === '3') {
+      displayPrediction()
+    } else if (e?.key === '4') {
+      navigate("/")
     }
+  }
 
-    const displayQuery = () => {
-        const queryComponent = [
-            <QueryComponent key={16}/>
-          ]
-        setCurrentContent(queryComponent)
-    }
-
-    const displayPrediction = () => {
-        const predictionComponent = [
-            <PredictionComponent key={17}/>
-          ]
-        setCurrentContent(predictionComponent)
-    }
-
-    const handleCurrentContent = (e: MenuItem) => {
-        if (e?.key === '1') {
-          displayMain()
-        } else if (e?.key === '2') {
-          displayQuery()
-        } else if (e?.key === '3') {
-          displayPrediction()
-        } else if(e?.key === '4'){
-          navigate("/")
-        }
-      }
-      
   return (
-    <SiteLayout child={currentContent} handleContent={handleCurrentContent}/>
+    <SiteLayout child={currentContent} handleContent={handleCurrentContent} />
   );
 }
 
