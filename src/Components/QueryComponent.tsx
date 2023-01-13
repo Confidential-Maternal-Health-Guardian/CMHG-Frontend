@@ -1,26 +1,23 @@
 
 import { Button, Form, Modal, Row, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
 import { getCookie } from '../Util/Cookie';
 import { baseUrl } from '../Util/Token';
 
 function QueryComponent() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [queryResult, setQueryResult] = useState("")
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const success = (queryResult: string) => {
+    Modal.success({
+      content: 'Your Query Result is: ' + queryResult,
+    });
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const error = () => {
+    Modal.error({
+      title: 'Error',
+      content: 'You exeeded the epsilon capacity',
+    });
   };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
 
   const onFinish = async (values: any) => {
     const token = getCookie("access-token")
@@ -38,9 +35,10 @@ function QueryComponent() {
         },
       });
       const data = await response.json()
-      if (data !== null) {
-        setQueryResult(data["queryResult"])
-        showModal()
+      if (data["queryResult"] !== null) {
+        success(data["queryResult"])
+      } else {
+        error()
       }
     }
   };
@@ -85,9 +83,6 @@ function QueryComponent() {
         </Button>
         </Row>
       </Form>
-      <Modal title="Your Query Result:" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>{queryResult}</p>
-      </Modal>
     </div>
   );
 }
