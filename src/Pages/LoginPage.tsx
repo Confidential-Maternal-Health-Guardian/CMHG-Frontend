@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import "../styles.css"
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { baseUrl } from '../Constants';
+import { baseUrl } from '../Util/Token';
 import { FC, useState } from 'react';
+import { setCookie } from '../Util/Cookie';
 
 type Props = {
   changeUserStatus: () => void
@@ -64,16 +65,13 @@ const LoginPage: FC<Props> = ({ changeUserStatus }) => {
   }
 
   const onFinish = async (values: any) => {
-    const data = await loginUser(values.username, values.password).then((data) => {
-      console.log(data)
-      if (data !== undefined) {
-        console.log(loginFailed)
-        changeUserStatus()
-        navigate("/main-page")
-      }
+    const data = await loginUser(values.username, values.password)
+    if (data !== undefined) {
+      changeUserStatus()
+      setCookie("access-token", data["access_token"])
+      setCookie("refresh-token", data["refresh_token"])
+      navigate("/main-page")
     }
-    )
-
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -111,10 +109,6 @@ const LoginPage: FC<Props> = ({ changeUserStatus }) => {
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
         </Form.Item>
 
         <Form.Item>

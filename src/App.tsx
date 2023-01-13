@@ -1,5 +1,5 @@
 
-import { Button, ConfigProvider } from 'antd';
+import { ConfigProvider } from 'antd';
 import { useState } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import LoginPage from './Pages/LoginPage';

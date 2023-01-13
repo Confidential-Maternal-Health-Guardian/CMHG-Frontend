@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { ConfigProvider, Layout, Menu, MenuProps } from "antd";
+import { Layout, Menu, MenuProps } from "antd";
 import {
     SearchOutlined,
     LogoutOutlined,
@@ -7,7 +7,6 @@ import {
     DatabaseOutlined,
 } from '@ant-design/icons';
 import "../styles.css"
-import { Header } from "antd/es/layout/layout";
 import cmhg_logo from "../cmhg_logo.png"
 
 export type MenuItem = Required<MenuProps>['items'][number];
@@ -50,12 +49,12 @@ const SiteLayout: FC<Props> = ({ child, handleContent }) => {
             setFontSize("xx-large")
             setPadLeft("200px")
         }
-    });
+    }, [collapsed]);
     return (
         <Layout className="content" style={{ minHeight: '100vh' }}>
             <Layout>
                 <Sider style={{ height: "100vh", position: "fixed" }} theme={"dark"} collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
-                    <div className="image-wrapper"><img id="cmhg-logo" src={cmhg_logo} /></div>
+                    <div className="image-wrapper"><img id="cmhg-logo" src={cmhg_logo} alt="cmhg-logo" /></div>
                     <div className="menu-top-header" style={{ fontSize: fontSize }}>CMHG</div>
                     <Menu theme={"dark"} onClick={handleContent} defaultSelectedKeys={['1']} mode="inline" items={menuItems}
                     />

@@ -1,5 +1,4 @@
 
-import { Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 
 function MainComponent() {

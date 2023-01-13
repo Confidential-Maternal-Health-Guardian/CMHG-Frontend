@@ -1,27 +1,77 @@
 
-import { Button, Form, Row, Select } from 'antd';
-import { SizeType } from 'antd/es/config-provider/SizeContext';
+import { Button, Form, Modal, Row, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useState } from 'react';
+import { getCookie } from '../Util/Cookie';
+import { baseUrl } from '../Util/Token';
 
 function QueryComponent() {
-  return (
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [queryResult, setQueryResult] = useState("")
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+
+  const onFinish = async (values: any) => {
+    const token = getCookie("access-token")
+    if (baseUrl !== undefined) {
+      const response = await fetch(baseUrl + "/query", {
+        method: 'POST',
+        body: JSON.stringify({
+          "function": values.function,
+          "field": values.field,
+          "epsilon": values.epsilon
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+      });
+      const data = await response.json()
+      if (data !== null) {
+        setQueryResult(data["queryResult"])
+        showModal()
+      }
+    }
+  };
+
+  return (
     <div className="query-component-form">
       <Form
         layout="inline"
         size={"large"}
+        onFinish={onFinish}
       >
+        <Row>
+          <Form.Item name="epsilon" label="Epsilon Value" style={{ paddingBottom: "15px" }}>
+            <Select placeholder="Epsilon Value">
+              <Select.Option value="0.5">0.5</Select.Option>
+              <Select.Option value="1.0">1.0</Select.Option>
+              <Select.Option value="1.5">1.5</Select.Option>
+              <Select.Option value="2.0">2.0</Select.Option>
+            </Select>
+          </Form.Item>
+        </Row>
         <Row style={{ fontSize: "23px" }} id="query-row">
-          <Form.Item label="SELECT" style={{ paddingRight: "10px" }}>
+          <Form.Item name="function" label="SELECT" style={{ paddingRight: "10px" }}>
             <Select placeholder="Aggregate Function">
               <Select.Option value="min">Min</Select.Option>
               <Select.Option value="max">Max</Select.Option>
-              <Select.Option value="avg">Avg</Select.Option>
+              <Select.Option value="average">Avg</Select.Option>
             </Select>
           </Form.Item>
           (
-          <Form.Item style={{ paddingLeft: "15px" }}>
+          <Form.Item name="field" style={{ paddingLeft: "15px" }}>
             <Select placeholder="Attributes" >
               <Select.Option value="age">Age</Select.Option>
               <Select.Option value="bodyTemp">Body Temp.</Select.Option>
@@ -35,6 +85,9 @@ function QueryComponent() {
         </Button>
         </Row>
       </Form>
+      <Modal title="Your Query Result:" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>{queryResult}</p>
+      </Modal>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 
-import { Button } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainComponent from '../Components/MainComponent';
 import PredictionComponent from '../Components/PredictionComponent';
 import QueryComponent from '../Components/QueryComponent';
 import SiteLayout, { MenuItem } from '../Components/SiteLayout';
+import { deleteCookie } from '../Util/Cookie';
 
 function MainPage() {
   const [currentContent, setCurrentContent] = useState<JSX.Element[]>([])
@@ -46,6 +46,8 @@ function MainPage() {
     } else if (e?.key === '3') {
       displayPrediction()
     } else if (e?.key === '4') {
+      deleteCookie("access-token")
+      deleteCookie("refresh-token")
       navigate("/")
     }
   }
