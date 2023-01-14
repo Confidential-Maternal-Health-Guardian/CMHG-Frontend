@@ -4,10 +4,10 @@ export const baseUrl = process.env.REACT_APP_CMHG_BASE_URL
 
 export async function refreshTokens() {
     if (baseUrl !== undefined) {
-        const response = await fetch(baseUrl + "/query", {
-            method: 'POST',
+        const response = await fetch(baseUrl + "/token/refresh", {
+            method: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + getCookie("access-token")
+                'Authorization': 'Bearer ' + getCookie("refresh-token")
             },
         });
         if (response.status === 200) {
@@ -16,7 +16,7 @@ export async function refreshTokens() {
             setCookie("access-token", data["access_token"])
             setCookie("refresh-token", data["refresh_token"])
         } else {
-
+            console.log("refresh tokens failed")
         }
     }
 }

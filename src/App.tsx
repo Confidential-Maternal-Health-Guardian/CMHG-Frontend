@@ -1,10 +1,11 @@
 
 import { ConfigProvider } from 'antd';
-import { useState } from 'react';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
 import LoginPage from './Pages/LoginPage';
 import MainPage from './Pages/MainPage';
 import RegisterPage from './Pages/RegisterPage';
+import { getCookie } from './Util/Cookie';
 
 const ProtectedRoute = ({
   isAllowed,
@@ -19,11 +20,24 @@ const ProtectedRoute = ({
 };
 
 function App() {
-
   const [userStatus, setUserStatus] = useState(0)
-  const changeUserStatus = () => {
-    setUserStatus(1)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (getCookie("access-token") !== undefined && getCookie("remember-user") === "true") {
+      console.log(getCookie("access-token"))
+      navigate("/main-page")
+    }
+  }, []);
+
+  const isUserAllowed = () => {
+    if (getCookie("access-token") !== undefined) {
+      return true
+    } else {
+      return false
+    }
   }
+
   return (
     <ConfigProvider
       theme={{
@@ -34,9 +48,9 @@ function App() {
     >
       <div className="App">
         <Routes>
-          <Route path="/" element={<LoginPage changeUserStatus={changeUserStatus} />} />
+          <Route path="/" element={<LoginPage setUserStatus={setUserStatus} />} />
           <Route path="register-page" element={<RegisterPage />} />
-          <Route path="main-page" element={<ProtectedRoute isAllowed={userStatus === 1} redirectPath="/">
+          <Route path="main-page" element={<ProtectedRoute isAllowed={isUserAllowed()} redirectPath="/">
             <MainPage />
           </ProtectedRoute>} />
         </Routes>

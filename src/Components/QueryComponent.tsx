@@ -1,10 +1,12 @@
 
 import { Button, Form, Modal, Row, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../Util/Cookie';
-import { baseUrl } from '../Util/Token';
+import { baseUrl, refreshTokens } from '../Util/Token';
 
 function QueryComponent() {
+  const navigate = useNavigate()
 
   const success = (queryResult: string) => {
     Modal.success({
@@ -12,10 +14,18 @@ function QueryComponent() {
     });
   };
 
-  const error = () => {
+  const epsilonError = () => {
     Modal.error({
       title: 'Error',
       content: 'You exeeded the epsilon capacity',
+    });
+  };
+
+  const timeOutError = () => {
+    Modal.error({
+      title: 'Error',
+      content: 'Connection timeout.',
+      onOk() { navigate("/main-page") },
     });
   };
 
@@ -35,10 +45,16 @@ function QueryComponent() {
         },
       });
       const data = await response.json()
-      if (data["queryResult"] !== null) {
-        success(data["queryResult"])
-      } else {
-        error()
+
+      if (response.status === 200) {
+        if (data["queryResult"] !== null) {
+          success(data["queryResult"])
+        } else {
+          epsilonError()
+        }
+      } else if (response.status === 403) {
+        refreshTokens()
+        timeOutError()
       }
     }
   };

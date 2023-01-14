@@ -11,7 +11,6 @@ function MainPage() {
   const [currentContent, setCurrentContent] = useState<JSX.Element[]>([])
 
   useEffect(() => {
-    //Runs only on the first render, calls parent table from backend
     displayMain()
 
   }, []);
@@ -48,6 +47,7 @@ function MainPage() {
     } else if (e?.key === '4') {
       deleteCookie("access-token")
       deleteCookie("refresh-token")
+      window.localStorage.setItem('userAllowed', "0");
       navigate("/")
     }
   }

@@ -9,10 +9,10 @@ import { FC, useState } from 'react';
 import { setCookie } from '../Util/Cookie';
 
 type Props = {
-  changeUserStatus: () => void
+  setUserStatus: React.Dispatch<React.SetStateAction<number>>
 }
 
-const LoginPage: FC<Props> = ({ changeUserStatus }) => {
+const LoginPage: FC<Props> = ({ setUserStatus }) => {
 
   const navigate = useNavigate()
   const [loginFailed, setLoginFailed] = useState(false)
@@ -65,9 +65,10 @@ const LoginPage: FC<Props> = ({ changeUserStatus }) => {
   }
 
   const onFinish = async (values: any) => {
+    setCookie("remember-user", values.remember)
     const data = await loginUser(values.username, values.password)
     if (data !== undefined) {
-      changeUserStatus()
+      setUserStatus(1)
       setCookie("access-token", data["access_token"])
       setCookie("refresh-token", data["refresh_token"])
       navigate("/main-page")

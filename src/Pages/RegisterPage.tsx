@@ -49,16 +49,23 @@ function RegisterPage() {
           icon: 'success',
           title: 'You have registered succesfuly',
           showConfirmButton: false,
-          timer: 1500
+          timer: 2500
         }).then(() => {
           navigate("/")
+        })
+      } else if (response.status === 400) {
+        Swal.fire({
+          icon: 'error',
+          title: 'The user is already registered!',
+          showConfirmButton: false,
+          timer: 2500
         })
       } else {
         Swal.fire({
           icon: 'error',
-          title: 'Something went wrong',
+          title: 'Something went wrong!',
           showConfirmButton: false,
-          timer: 1500
+          timer: 2500
         })
       }
     }
