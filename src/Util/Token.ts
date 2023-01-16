@@ -14,8 +14,8 @@ export async function refreshTokens() {
             const data = await response.json()
             console.log("Tokens refreshed")
             setCookie("access-token", data["access_token"])
-            setCookie("refresh-token", data["refresh_token"])
         } else {
+            //refresh expired
             console.log("refresh tokens failed")
         }
     }

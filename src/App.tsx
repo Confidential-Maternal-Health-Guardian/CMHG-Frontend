@@ -25,7 +25,6 @@ function App() {
 
   useEffect(() => {
     if (getCookie("access-token") !== undefined && getCookie("remember-user") === "true") {
-      console.log(getCookie("access-token"))
       navigate("/main-page")
     }
   }, []);

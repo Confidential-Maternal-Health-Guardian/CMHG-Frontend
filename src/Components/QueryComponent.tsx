@@ -17,14 +17,14 @@ function QueryComponent() {
   const epsilonError = () => {
     Modal.error({
       title: 'Error',
-      content: 'You exeeded the epsilon capacity',
+      content: 'You exeeded the epsilon capacity.',
     });
   };
 
   const timeOutError = () => {
     Modal.error({
       title: 'Error',
-      content: 'Connection timeout.',
+      content: 'Connection timeout, please try again.',
       onOk() { navigate("/main-page") },
     });
   };

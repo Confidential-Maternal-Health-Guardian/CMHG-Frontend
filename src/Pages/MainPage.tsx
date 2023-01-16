@@ -47,7 +47,6 @@ function MainPage() {
     } else if (e?.key === '4') {
       deleteCookie("access-token")
       deleteCookie("refresh-token")
-      window.localStorage.setItem('userAllowed', "0");
       navigate("/")
     }
   }
