@@ -21,14 +21,6 @@ function QueryComponent() {
     });
   };
 
-  const timeOutError = () => {
-    Modal.error({
-      title: 'Error',
-      content: 'Connection timeout, please try again.',
-      onOk() { navigate("/main-page") },
-    });
-  };
-
   const onFinish = async (values: any) => {
     const token = getCookie("access-token")
     if (baseUrl !== undefined) {
@@ -53,8 +45,13 @@ function QueryComponent() {
           epsilonError()
         }
       } else if (response.status === 403) {
-        refreshTokens()
-        timeOutError()
+        refreshTokens().then((res) => {
+          if (res) {
+            onFinish(values)
+          } else {
+            navigate("/")
+          }
+        })
       }
     }
   };

@@ -11,12 +11,15 @@ export async function refreshTokens() {
             },
         });
         if (response.status === 200) {
+            //access expired
             const data = await response.json()
-            console.log("Tokens refreshed")
+            console.log("tokens refreshed")
             setCookie("access-token", data["access_token"])
+            return true
         } else {
             //refresh expired
             console.log("refresh tokens failed")
+            return false
         }
     }
 }

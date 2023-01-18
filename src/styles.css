@@ -121,8 +121,5 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 200px;
-    border: 2px solid #00b96b;
-    border-left: unset;
-    border-right: unset;
+    height: 15vh;
 }
