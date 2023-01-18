@@ -64,7 +64,8 @@ function QueryComponent() {
         onFinish={onFinish}
       >
         <Row>
-          <Form.Item name="epsilon" label="Epsilon Value" style={{ paddingBottom: "15px" }}>
+          <Form.Item name="epsilon" label="Epsilon Value" style={{ paddingBottom: "15px" }}
+            rules={[{ required: true, message: 'Please input epsilon value!' }]}>
             <Select placeholder="Epsilon Value">
               <Select.Option value="0.5">0.5</Select.Option>
               <Select.Option value="1.0">1.0</Select.Option>
@@ -74,7 +75,8 @@ function QueryComponent() {
           </Form.Item>
         </Row>
         <Row style={{ fontSize: "23px" }} id="query-row">
-          <Form.Item name="function" label="SELECT" style={{ paddingRight: "10px" }}>
+          <Form.Item name="function" label="SELECT" style={{ paddingRight: "10px" }}
+            rules={[{ required: true, message: 'Please input aggregate function!' }]}>
             <Select placeholder="Aggregate Function">
               <Select.Option value="min">Min</Select.Option>
               <Select.Option value="max">Max</Select.Option>
@@ -82,7 +84,8 @@ function QueryComponent() {
             </Select>
           </Form.Item>
           (
-          <Form.Item name="field" style={{ paddingLeft: "15px" }}>
+          <Form.Item name="field" style={{ paddingLeft: "15px" }}
+            rules={[{ required: true, message: 'Please input an attribute!' }]}>
             <Select placeholder="Attributes" >
               <Select.Option value="age">Age</Select.Option>
               <Select.Option value="bodyTemp">Body Temp.</Select.Option>

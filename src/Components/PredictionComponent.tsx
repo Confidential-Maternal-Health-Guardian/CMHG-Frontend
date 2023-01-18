@@ -1,5 +1,5 @@
 
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../Util/Cookie';
 import { baseUrl, refreshTokens } from '../Util/Token';
@@ -88,9 +88,9 @@ function PredictionComponent() {
         <Form.Item
           label="Age"
           name="age"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[{ required: true, message: 'Please input your username.' }]}
         >
-          <Input placeholder="Age" />
+          <InputNumber placeholder="Age" />
         </Form.Item>
 
         <Form.Item
@@ -98,21 +98,21 @@ function PredictionComponent() {
           name="sbp"
           rules={[{ required: true, message: 'Please input your Systolic Blood Pressure.' }]}
         >
-          <Input placeholder="Systolic Blood Pressure" />
+          <InputNumber placeholder="Systolic Blood Pressure" />
         </Form.Item>
         <Form.Item
           label="DBP"
           name="dbp"
           rules={[{ required: true, message: 'Please input your Diastolic Blood Pressure.' }]}
         >
-          <Input placeholder="Diastolic Blood Pressure" />
+          <InputNumber placeholder="Diastolic Blood Pressure" />
         </Form.Item>
         <Form.Item
           label="BS"
           name="bs"
           rules={[{ required: true, message: 'Please input your Blood Sugar.' }]}
         >
-          <Input placeholder="Blood Sugar" />
+          <InputNumber placeholder="Blood Sugar" />
         </Form.Item>
 
         <Form.Item
@@ -120,7 +120,7 @@ function PredictionComponent() {
           name="bt"
           rules={[{ required: true, message: 'Please input your Body Temperature.' }]}
         >
-          <Input placeholder="Body Temperature" />
+          <InputNumber placeholder="Body Temperature" />
         </Form.Item>
 
         <Form.Item
@@ -128,18 +128,20 @@ function PredictionComponent() {
           name="hr"
           rules={[{ required: true, message: 'Please input your Heart Rate.' }]}
         >
-          <Input placeholder="Heart Rate" />
+          <InputNumber placeholder="Heart Rate" />
         </Form.Item>
-        <Form.Item name="epsilon" label="Epsilon Value" style={{ textAlign: "left" }}>
-          <Select placeholder="Epsilon Value">
+        <Form.Item name="epsilon" label="Epsilon Value"
+          rules={[{ required: true, message: 'Please input epsilon value.' }]}>
+          <Select placeholder="Epsilon Value" style={{ textAlign: "left" }}>
             <Select.Option value="0.5">0.5</Select.Option>
             <Select.Option value="1.0">1.0</Select.Option>
             <Select.Option value="1.5">1.5</Select.Option>
             <Select.Option value="2.0">2.0</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item name="model" label="Model" style={{ textAlign: "left" }}>
-          <Select placeholder="Model Type">
+        <Form.Item name="model" label="Model"
+          rules={[{ required: true, message: 'Please input model type.' }]}>
+          <Select placeholder="Model Type" style={{ textAlign: "left" }}>
             <Select.Option value="dpr">Differential Private Random Forest</Select.Option>
             <Select.Option value="rf">Random Forest</Select.Option>
             <Select.Option value="dpsgd">Differential Private Stochastic Gradient Descent</Select.Option>

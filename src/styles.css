@@ -47,6 +47,10 @@ body {
     font-size: large !important;
 }
 
+.ant-input-number {
+    width: 100% !important;
+}
+
 #query-row {
     width: 100%;
 }
