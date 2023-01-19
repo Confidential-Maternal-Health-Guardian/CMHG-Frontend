@@ -143,9 +143,7 @@ function PredictionComponent() {
           rules={[{ required: true, message: 'Please input model type.' }]}>
           <Select placeholder="Model Type" style={{ textAlign: "left" }}>
             <Select.Option value="dpr">Differential Private Random Forest</Select.Option>
-            <Select.Option value="rf">Random Forest</Select.Option>
             <Select.Option value="dpsgd">Differential Private Stochastic Gradient Descent</Select.Option>
-            <Select.Option value="sgd">Stochastic Gradient Descent</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
