@@ -56,8 +56,6 @@ function App() {
   const navigate = useNavigate()
   useEffect(() => {
     setCurrentPage(<LoadingComponent />)
-    console.log(getCookie("access-token"))
-    console.log(getCookie("remember-user"))
     if ((getCookie("access-token") !== undefined && getCookie("remember-user") === "true")) {
       refreshTokens().then((res) => {
         if (res) {
