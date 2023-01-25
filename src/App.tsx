@@ -7,6 +7,7 @@ import LoginPage from './Pages/LoginPage';
 import MainPage from './Pages/MainPage';
 import RegisterPage from './Pages/RegisterPage';
 import { getCookie } from './Util/Cookie';
+import { updateEpsilon } from './Util/Epsilon';
 import { refreshTokens } from './Util/Token';
 
 const ProtectedRoute = ({
@@ -23,16 +24,18 @@ const ProtectedRoute = ({
 
 function App() {
   const [userStatus, setUserStatus] = useState(0)
-  const [pageLoaded, setPageLoaded] = useState(false)
+  const [currentPage, setCurrentPage] = useState(<LoadingComponent></LoadingComponent>)
 
   const navigate = useNavigate()
-
   useEffect(() => {
     if (getCookie("access-token") !== undefined && getCookie("remember-user") === "true") {
       refreshTokens().then((res) => {
-        setPageLoaded(true)
+        setCurrentPage(loadedPage)
         if (res) {
-          navigate("/main-page")
+          updateEpsilon().then((res) => {
+            console.log(res)
+            navigate("/main-page", { state: { res } })
+          })
         } else {
           navigate("/")
         }
@@ -48,27 +51,26 @@ function App() {
     }
   }
 
-  if (!pageLoaded) {
-    return <LoadingComponent />
-  }
+  const loadedPage = <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: '#00b96b',
+      },
+    }}
+  >
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<LoginPage setUserStatus={setUserStatus} />} />
+        <Route path="register-page" element={<RegisterPage />} />
+        <Route path="main-page" element={<ProtectedRoute isAllowed={isUserAllowed()} redirectPath="/">
+          <MainPage />
+        </ProtectedRoute>} />
+      </Routes>
+    </div>
+  </ConfigProvider >
+
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#00b96b',
-        },
-      }}
-    >
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<LoginPage setUserStatus={setUserStatus} />} />
-          <Route path="register-page" element={<RegisterPage />} />
-          <Route path="main-page" element={<ProtectedRoute isAllowed={isUserAllowed()} redirectPath="/">
-            <MainPage />
-          </ProtectedRoute>} />
-        </Routes>
-      </div>
-    </ConfigProvider>
+    <div>{currentPage}</div>
   );
 }
 

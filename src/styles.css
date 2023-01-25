@@ -111,6 +111,12 @@ body {
     justify-content: center;
 }
 
+.epsilon-text {
+    text-align: center;
+    color: white;
+    padding-top: 10px;
+}
+
 .loading-spin {
     display: flex;
     justify-content: center;

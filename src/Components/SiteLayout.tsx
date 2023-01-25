@@ -26,10 +26,10 @@ export function getItem(
 type Props = {
     child: JSX.Element[];
     handleContent: (e: MenuItem) => void;
+    epsilon: number;
 }
 
-const SiteLayout: FC<Props> = ({ child, handleContent }) => {
-
+const SiteLayout: FC<Props> = ({ child, handleContent, epsilon }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [padLeft, setPadLeft] = useState("200px");
     const { Content, Sider } = Layout;
@@ -50,14 +50,15 @@ const SiteLayout: FC<Props> = ({ child, handleContent }) => {
             setPadLeft("200px")
         }
     }, [collapsed]);
+
     return (
         <Layout className="content" style={{ minHeight: '100vh' }}>
             <Layout>
                 <Sider style={{ height: "100vh", position: "fixed" }} theme={"dark"} collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
                     <div className="image-wrapper"><img id="cmhg-logo" src={cmhg_logo} alt="cmhg-logo" /></div>
                     <div className="menu-top-header" style={{ fontSize: fontSize }}>CMHG</div>
-                    <Menu theme={"dark"} onClick={handleContent} defaultSelectedKeys={['1']} mode="inline" items={menuItems}
-                    />
+                    <Menu theme={"dark"} onClick={handleContent} defaultSelectedKeys={['1']} mode="inline" items={menuItems} />
+                    <div className="epsilon-text">Epsilon: {epsilon}</div>
                 </Sider>
                 <Layout className="site-layout" style={{ paddingLeft: padLeft, transition: "all .2s" }}>
                     <Content >

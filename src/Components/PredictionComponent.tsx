@@ -1,10 +1,16 @@
 
 import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../Util/Cookie';
 import { baseUrl, refreshTokens } from '../Util/Token';
 
-function PredictionComponent() {
+type Props = {
+  epsilon: number;
+  setEpsilon: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const PredictionComponent: FC<Props> = ({ epsilon, setEpsilon }) => {
   const navigate = useNavigate()
 
   const success = (res: string) => {
@@ -54,6 +60,7 @@ function PredictionComponent() {
       if (response.status === 200) {
         if (data["riskLevel"] !== null) {
           success(data["riskLevel"])
+          setEpsilon(epsilon - values.epsilon)
         } else {
           epsilonError()
         }
@@ -69,10 +76,6 @@ function PredictionComponent() {
     }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
     <div className="prediction-component-form">
       <Form
@@ -81,7 +84,6 @@ function PredictionComponent() {
         wrapperCol={{ span: 16 }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         style={{ width: "inherit" }}
       >

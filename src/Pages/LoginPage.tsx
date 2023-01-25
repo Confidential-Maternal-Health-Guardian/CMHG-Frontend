@@ -7,6 +7,7 @@ import Title from 'antd/es/typography/Title';
 import { baseUrl } from '../Util/Token';
 import { FC, useState } from 'react';
 import { setCookie } from '../Util/Cookie';
+import { updateEpsilon } from '../Util/Epsilon';
 
 type Props = {
   setUserStatus: React.Dispatch<React.SetStateAction<number>>
@@ -71,12 +72,10 @@ const LoginPage: FC<Props> = ({ setUserStatus }) => {
       setUserStatus(1)
       setCookie("access-token", data["access_token"])
       setCookie("refresh-token", data["refresh_token"])
-      navigate("/main-page")
+      updateEpsilon().then((res) => {
+        navigate("/main-page", { state: { res } })
+      })
     }
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -88,7 +87,6 @@ const LoginPage: FC<Props> = ({ setUserStatus }) => {
         className="login-form"
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
       >
         <Form.Item
           name="username"

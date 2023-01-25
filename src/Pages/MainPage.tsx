@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainComponent from '../Components/MainComponent';
 import PredictionComponent from '../Components/PredictionComponent';
 import QueryComponent from '../Components/QueryComponent';
@@ -9,10 +9,15 @@ import { deleteCookie } from '../Util/Cookie';
 
 function MainPage() {
   const [currentContent, setCurrentContent] = useState<JSX.Element[]>([])
+  const { state } = useLocation();
+  const [currentEpsilon, setCurrentEpsilon] = useState(0)
+
+  useEffect(() => {
+    setCurrentEpsilon(state.res)
+  }, [state.res]);
 
   useEffect(() => {
     displayMain()
-
   }, []);
 
   const navigate = useNavigate()
@@ -25,14 +30,14 @@ function MainPage() {
 
   const displayQuery = () => {
     const queryComponent = [
-      <QueryComponent key={16} />
+      <QueryComponent key={16} epsilon={currentEpsilon} setEpsilon={setCurrentEpsilon} />
     ]
     setCurrentContent(queryComponent)
   }
 
   const displayPrediction = () => {
     const predictionComponent = [
-      <PredictionComponent key={17} />
+      <PredictionComponent key={17} epsilon={currentEpsilon} setEpsilon={setCurrentEpsilon} />
     ]
     setCurrentContent(predictionComponent)
   }
@@ -52,7 +57,7 @@ function MainPage() {
   }
 
   return (
-    <SiteLayout child={currentContent} handleContent={handleCurrentContent} />
+    <SiteLayout child={currentContent} handleContent={handleCurrentContent} epsilon={currentEpsilon} />
   );
 }
 

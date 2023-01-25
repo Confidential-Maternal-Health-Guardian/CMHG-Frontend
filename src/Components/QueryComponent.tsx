@@ -1,11 +1,17 @@
 
 import { Button, Form, Modal, Row, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../Util/Cookie';
 import { baseUrl, refreshTokens } from '../Util/Token';
 
-function QueryComponent() {
+type Props = {
+  epsilon: number;
+  setEpsilon: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const QueryComponent: FC<Props> = ({ epsilon, setEpsilon }) => {
   const navigate = useNavigate()
 
   const success = (queryResult: string) => {
@@ -41,6 +47,7 @@ function QueryComponent() {
       if (response.status === 200) {
         if (data["queryResult"] !== null) {
           success(data["queryResult"])
+          setEpsilon(epsilon - values.epsilon)
         } else {
           epsilonError()
         }
