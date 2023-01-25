@@ -32,9 +32,9 @@ function App() {
     if ((getCookie("access-token") !== undefined && getCookie("remember-user") === "true")) {
       setLoading(false)
       refreshTokens().then((res) => {
+        setLoading(true)
         if (res) {
           updateEpsilon().then((res) => {
-            setLoading(true)
             navigate("/main-page", { state: { res } })
           })
         } else {
