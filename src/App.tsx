@@ -1,7 +1,7 @@
 
 import { ConfigProvider } from 'antd';
 import { useEffect, useState } from 'react';
-import { Navigate, Outlet, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import LoadingComponent from './Components/LoadingComponent';
 import LoginPage from './Pages/LoginPage';
 import MainPage from './Pages/MainPage';
@@ -24,6 +24,25 @@ const ProtectedRoute = ({
 
 function App() {
   const [userStatus, setUserStatus] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const location = useLocation()
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if ((getCookie("access-token") !== undefined && getCookie("remember-user") === "true")) {
+      setLoading(false)
+      refreshTokens().then((res) => {
+        if (res) {
+          updateEpsilon().then((res) => {
+            setLoading(true)
+            navigate("/main-page", { state: { res } })
+          })
+        } else {
+          navigate("/")
+        }
+      })
+    }
+  }, []);
 
   const isUserAllowed = () => {
     if (getCookie("access-token") !== undefined) {
@@ -51,28 +70,8 @@ function App() {
     </div>
   </ConfigProvider >
 
-  const [currentPage, setCurrentPage] = useState(loadedPage)
-
-  const navigate = useNavigate()
-  useEffect(() => {
-    setCurrentPage(<LoadingComponent />)
-    if ((getCookie("access-token") !== undefined && getCookie("remember-user") === "true")) {
-      refreshTokens().then((res) => {
-        if (res) {
-          updateEpsilon().then((res) => {
-            setCurrentPage(loadedPage)
-            navigate("/main-page", { state: { res } })
-          })
-        } else {
-          navigate("/")
-        }
-      })
-    }
-  }, []);
-
-
   return (
-    <div>{currentPage}</div>
+    <>{loading ? loadedPage : <LoadingComponent />}</>
   );
 }
 
