@@ -24,24 +24,6 @@ const ProtectedRoute = ({
 
 function App() {
   const [userStatus, setUserStatus] = useState(0)
-  const [currentPage, setCurrentPage] = useState(<LoadingComponent></LoadingComponent>)
-
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (getCookie("access-token") !== undefined && getCookie("remember-user") === "true") {
-      refreshTokens().then((res) => {
-        setCurrentPage(loadedPage)
-        if (res) {
-          updateEpsilon().then((res) => {
-            console.log(res)
-            navigate("/main-page", { state: { res } })
-          })
-        } else {
-          navigate("/")
-        }
-      })
-    }
-  }, []);
 
   const isUserAllowed = () => {
     if (getCookie("access-token") !== undefined) {
@@ -68,6 +50,28 @@ function App() {
       </Routes>
     </div>
   </ConfigProvider >
+
+  const [currentPage, setCurrentPage] = useState(loadedPage)
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    setCurrentPage(<LoadingComponent />)
+    console.log(getCookie("access-token"))
+    console.log(getCookie("remember-user"))
+    if ((getCookie("access-token") !== undefined && getCookie("remember-user") === "true")) {
+      refreshTokens().then((res) => {
+        if (res) {
+          updateEpsilon().then((res) => {
+            setCurrentPage(loadedPage)
+            navigate("/main-page", { state: { res } })
+          })
+        } else {
+          navigate("/")
+        }
+      })
+    }
+  }, []);
+
 
   return (
     <div>{currentPage}</div>
